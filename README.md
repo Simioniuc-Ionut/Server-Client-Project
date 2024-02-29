@@ -1,1 +1,27 @@
 # Server-Client-Project
+Overview:
+The program consists of two applications: a "client" and a "server", which communicate with each other based on a specific protocol. The protocol has the following specifications:
+
+Communication occurs through the execution of commands read from the keyboard in the client and executed in child processes created by the server.
+Commands are strings of characters delimited by a newline. 
+Responses are byte strings prefixed by the length of the response.
+The result obtained from executing any command will be displayed by the client.
+Child processes in the server do not communicate directly with the client but only with the parent process.
+The minimal protocol includes the following commands:
+"login: username" - whose existence is validated using a configuration file containing all users who have access to functionalities. The command execution will be performed in a child process in the server.
+"get-logged-users" - displays information (username, hostname for remote login, time entry was made) about users authenticated on the operating system (see "man 5 utmp" and "man 3 getutent"). This command cannot be executed if the user is not authenticated in the application. The command execution will be performed in a child process in the server.
+"get-proc-info: pid" - displays information (name, state, ppid, uid, vmsize) about the specified process (information source: the file /proc/<pid>/status). This command cannot be executed if the user is not authenticated in the application. The command execution will be performed in a child process in the server.
+"logout"
+"quit"
+Inter-process communication will be done using at least once each of the following mechanisms: pipes, FIFOs, and socketpair.
+Specifications:
+Client Application:
+
+Reads commands from the keyboard and sends them to the server.
+Receives responses from the server and displays them to the user.
+Server Application:
+
+Listens for connections from clients.
+Creates child processes to handle incoming commands from clients.
+Validates user authentication for certain commands.
+Executes commands and sends back responses to the client.
